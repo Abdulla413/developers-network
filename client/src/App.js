@@ -1,58 +1,84 @@
-import React from 'react';
-import logo from './logo.svg';
-import { Counter } from './features/counter/Counter';
-import './App.css';
+import React, { useEffect } from "react";
+import "./App.css";
+import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
+import Navbar from "./components/layout/Navbar";
+import Landing from "./components/layout/Landing";
+import Login from "./components/auth/Login";
+import Register from "./components/auth/Register";
+import Alert from "./components/layout/Alert";
+import Dashboard from "./components/dashboard/Dashboard";
+import PrivateRoute from "./components/routing/PrivateRoute";
+import AddExperience from "./components/profile-form/AddExperience";
+import AddEducation from "./components/profile-form/AddEducation";
+import Profiles from "./components/profiles/Profiles";
+import Profile from "./components/profile/Profile";
+import Posts from "./components/posts/Posts";
+import Post from "./components/post/Post";
+import NotFound from "./components/layout/NotFound";
+import ProfileForm from "./components/profile-form/ProfileForm";
 
-function App() {
+//Redux
+
+import { Provider } from "react-redux";
+import store from "./app/store.js";
+import { loadUser } from "./actions/auth";
+import setAuthToken from "./utils/setAuthToken";
+
+import "./App.css";
+import { LOGOUT } from "./actions/types";
+
+const App = () => {
+  useEffect(() => {
+    if (localStorage.token) {
+      setAuthToken(localStorage.token);
+    }
+    store.dispatch(loadUser());
+    window.addEventListener("storage", () => {
+      if (!localStorage.token) store.dispatch({ type: LOGOUT });
+    });
+  }, []);
+
   return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <Counter />
-        <p>
-          Edit <code>src/App.js</code> and save to reload.
-        </p>
-        <span>
-          <span>Learn </span>
-          <a
-            className="App-link"
-            href="https://reactjs.org/"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            React
-          </a>
-          <span>, </span>
-          <a
-            className="App-link"
-            href="https://redux.js.org/"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            Redux
-          </a>
-          <span>, </span>
-          <a
-            className="App-link"
-            href="https://redux-toolkit.js.org/"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            Redux Toolkit
-          </a>
-          ,<span> and </span>
-          <a
-            className="App-link"
-            href="https://react-redux.js.org/"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            React Redux
-          </a>
-        </span>
-      </header>
-    </div>
+    <Provider store={store}>
+      <Router>
+        <Navbar />
+
+        <Alert />
+        <Routes>
+          <Route path="/" element={<Landing />} />
+
+          <Route path="register" element={<Register />} />
+          <Route path="login" element={<Login />} />
+          <Route path="profiles" element={<Profiles />} />
+          <Route path="/profile/:id" element={<Profile />} />
+
+          <Route
+            path="dashboard"
+            element={<PrivateRoute component={Dashboard} />}
+          />
+          <Route
+            path="create-profile"
+            element={<PrivateRoute component={ProfileForm} />}
+          />
+          <Route
+            path="edit-profile"
+            element={<PrivateRoute component={ProfileForm} />}
+          />
+          <Route
+            path="add-experience"
+            element={<PrivateRoute component={AddExperience} />}
+          />
+          <Route
+            path="add-education"
+            element={<PrivateRoute component={AddEducation} />}
+          />
+          <Route path="posts" element={<PrivateRoute component={Posts} />} />
+          <Route path="posts/:id" element={<PrivateRoute component={Post} />} />
+          <Route path="/*" element={<NotFound />} />
+        </Routes>
+      </Router>
+    </Provider>
   );
-}
+};
 
 export default App;
