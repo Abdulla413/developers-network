@@ -1,10 +1,11 @@
 const express = require("express");
 const router = express.Router();
 const auth = require("../../middleware/auth");
-const config = require("config");
 const jwt = require("jsonwebtoken");
 const { check, validationResult } = require("express-validator");
 const bcrypt = require("bcryptjs");
+const dotenv=require('dotenv')
+dotenv.config();
 
 const User = require("../../models/User");
 
@@ -13,6 +14,7 @@ const User = require("../../models/User");
 // @access Public
 
 router.get("/", auth, async (req, res) => {
+
   try {
     const user = await User.findById(req.user.id).select("-password");
     res.json(user);
@@ -75,7 +77,7 @@ router.post(
 
       jwt.sign(
         payload,
-        config.get("jwtSecret"),
+        process.env.JWT_SECRET,
         { expiresIn: "5 days" },
         (err, token) => {
           if (err) throw err;

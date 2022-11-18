@@ -1,9 +1,10 @@
 const express = require("express");
 const router = express.Router();
 const axios = require("axios");
-const config = require("config");
 const auth = require("../../middleware/auth.js");
 const { check, validationResult } = require("express-validator");
+const dotenv=require('dotenv');
+dotenv.config();
 
 const Profile = require("../../models/Profile.js");
 const User = require("../../models/User.js");
@@ -302,9 +303,10 @@ router.get("/github/:username", async (req, res) => {
     );
     const headers = {
       "user-agent": "node.js",
-      Authorization: `token ${config.get("githubToken")}`,
+      Authorization: `token ${process.env.Gihub_Token}`,
     };
     const gitHubResponse = await axios.get(uri, { headers });
+    console.log(gitHubResponse, "i am")
     return res.json(gitHubResponse.data);
   } catch (err) {
     console.error(err.message);

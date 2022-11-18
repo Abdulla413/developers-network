@@ -3,15 +3,16 @@ const router = express.Router();
 const gravatar = require("gravatar");
 const bcrypt = require("bcryptjs");
 const jwt = require("jsonwebtoken");
-const config = require("config");
 const { check, validationResult } = require("express-validator");
+const dotenv=require('dotenv')
+dotenv.config();
+
 
 const User = require("../../models/User");
 
 // @route  POST api/users
 // @desc   Register user
 // @access Public
-
 
 router.post(
   "/",
@@ -69,8 +70,8 @@ router.post(
 
       jwt.sign(
         payload,
-        config.get("jwtSecret"),
-        { expiresIn: 360000 },
+        process.env.JWT_SECRET,
+        { expiresIn: 36000 },
         (err, token) => {
           if (err) throw err;
           res.json({ token });

@@ -21,7 +21,7 @@ const initialState = {
 
 const ProfileForm = ({
   profile: { profile, loading },
-  creatProfile,
+  createProfile,
   getCurrentProfile,
 }) => {
   const [formData, setFormData] = useState(initialState);

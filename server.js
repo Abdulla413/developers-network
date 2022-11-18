@@ -2,6 +2,7 @@ const express = require('express');
 const app = express();
 const connectDB=require('./config/db.js');
 const path=require('path')
+const cors = require('cors')
 
 
 
@@ -11,6 +12,7 @@ connectDB();
 // Init Middleware
 
 app.use(express.json({ extended: false }));
+app.use(cors())
 
 // app.get("/", (req, res)=>{
   
