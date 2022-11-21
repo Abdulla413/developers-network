@@ -30,7 +30,7 @@ app.use("/api/profile", require("./routes/api/profile"));
 // Serve static assets in production
 
 if (process.env.NODE_ENV === "production") {
-  app.use(express.static(__dirname + "/build/static"));
+  app.use(express.static(__dirname + "/build"));
   app.get("*", (req, res) => {
     res.sendFile(path.resolve(`${__dirname}/build/index.html)`))
   });
